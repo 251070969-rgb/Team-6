@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberShield AI - Password Strength Checker & Generator</title>
+  <meta name="description" content="AI-driven password strength analyzer, time-to-crack calculator, and secure password generator. Protect your accounts with smart entropy analysis.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Decorative Grid & Glow -->
+  <div class="bg-grid"></div>
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div class="brand-text">
+          <h1>CyberShield <span class="badge-ai">AI</span></h1>
+          <p>Next-Gen Password Strength Analyzer & Smart Generator</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="app-tabs">
+        <button class="tab-btn active" id="tabCheckerBtn" onclick="switchTab('checker')">
+          <i class="fa-solid fa-gauge-high"></i> Strength Checker
+        </button>
+        <button class="tab-btn" id="tabGeneratorBtn" onclick="switchTab('generator')">
+          <i class="fa-solid fa-key"></i> Smart Generator
+        </button>
+      </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="app-content">
+
+      <!-- SECTION 1: PASSWORD STRENGTH CHECKER -->
+      <section id="checkerSection" class="tab-section active">
+        <div class="grid-layout">
+          
+          <!-- Left Column: Input & Main Metrics -->
+          <div class="card glass-card">
+            <div class="card-header">
+              <h2><i class="fa-solid fa-lock"></i> Analyze Password</h2>
+              <span class="privacy-badge"><i class="fa-solid fa-user-shield"></i> 100% Client-Side Private</span>
+            </div>
+
+            <!-- Password Input Group -->
+            <div class="input-wrapper">
+              <input type="password" id="passwordInput" placeholder="Enter password to test strength..." autocomplete="off" spellcheck="false">
+              <div class="input-actions">
+                <button class="action-icon-btn" id="togglePasswordBtn" title="Toggle Visibility" onclick="togglePasswordVisibility()">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+                <button class="action-icon-btn" id="copyPasswordBtn" title="Copy Password" onclick="copyInputPassword()">
+                  <i class="fa-solid fa-copy"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Strength Bar & Status Badge -->
+            <div class="strength-meter-container">
+              <div class="meter-labels">
+                <span>Security Level:</span>
+                <span id="strengthLabel" class="strength-status status-empty">Enter a Password</span>
+              </div>
+              <div class="meter-bar-track">
+                <div id="meterBarFill" class="meter-bar-fill" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <!-- Time to Crack Card (Featured Metric) -->
+            <div class="crack-time-box">
+              <div class="crack-time-icon">
+                <i class="fa-solid fa-hourglass-half"></i>
+              </div>
+              <div class="crack-time-info">
+                <span class="crack-time-title">Estimated Time to Hack / Crack</span>
+                <h3 id="timeToCrackDisplay" class="crack-time-val">---</h3>
+                <p class="crack-time-subtext" id="crackTimeSubtext">Based on 100 Billion guesses/sec offline GPU cluster</p>
+              </div>
+            </div>
+
+            <!-- AI Auto-Strengthen Action -->
+            <div class="auto-fix-box">
+              <button class="btn btn-secondary btn-full" id="autoFixBtn" onclick="autoFixPassword()">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> AI Smart Strengthen
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Column: Criteria Checklist & AI Analysis -->
+          <div class="card glass-card">
+            <div class="card-header">
+              <h2><i class="fa-solid fa-list-check"></i> Security Rules</h2>
+              <span class="score-badge" id="scoreBadge">0 / 100 PTS</span>
+            </div>
+
+            <!-- Security Requirements Grid -->
+            <ul class="criteria-list" id="criteriaList">
+              <li id="reqLength" class="req-item">
+                <i class="fa-solid fa-circle-xmark req-icon"></i>
+                <span>Minimum <strong>8 characters</strong> long</span>
+              </li>
+              <li id="reqUpper" class="req-item">
+                <i class="fa-solid fa-circle-xmark req-icon"></i>
+                <span>At least one <strong>uppercase letter (A-Z)</strong></span>
+              </li>
+              <li id="reqLower" class="req-item">
+                <i class="fa-solid fa-circle-xmark req-icon"></i>
+                <span>At least one <strong>lowercase letter (a-z)</strong></span>
+              </li>
+              <li id="reqNumber" class="req-item">
+                <i class="fa-solid fa-circle-xmark req-icon"></i>
+                <span>At least one <strong>number (0-9)</strong></span>
+              </li>
+              <li id="reqSymbol" class="req-item">
+                <i class="fa-solid fa-circle-xmark req-icon"></i>
+                <span>At least one <strong>special character (@, $, %, !, ^, &, *)</strong></span>
+              </li>
+            </ul>
+
+            <!-- AI Insight Box -->
+            <div class="ai-insight-card">
+              <div class="ai-insight-header">
+                <i class="fa-solid fa-brain"></i>
+                <span>AI Pattern & Vulnerability Insights</span>
+              </div>
+              <div class="ai-insight-body" id="aiInsightsList">
+                <p class="ai-insight-placeholder">Start typing a password to generate AI vulnerability feedback and pattern analysis...</p>
+              </div>
+            </div>
+
+            <!-- Technical Stats Breakdown -->
+            <div class="tech-stats-grid">
+              <div class="stat-pill">
+                <span class="stat-name">Entropy</span>
+                <span class="stat-val" id="statEntropy">0 bits</span>
+              </div>
+              <div class="stat-pill">
+                <span class="stat-name">Length</span>
+                <span class="stat-val" id="statLength">0 chars</span>
+              </div>
+              <div class="stat-pill">
+                <span class="stat-name">Charset Pool</span>
+                <span class="stat-val" id="statCharset">0</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SECTION 2: PASSWORD GENERATOR -->
+      <section id="generatorSection" class="tab-section">
+        <div class="grid-layout single-col">
+          
+          <div class="card glass-card max-width-card">
+            <div class="card-header">
+              <h2><i class="fa-solid fa-gears"></i> Smart Password Generator</h2>
+              <span class="privacy-badge"><i class="fa-solid fa-bolt"></i> High-Entropy RNG</span>
+            </div>
+
+            <!-- Generated Output Field -->
+            <div class="input-wrapper gen-output-wrapper">
+              <input type="text" id="generatedPassword" readonly placeholder="Click generate to create..." autocomplete="off">
+              <div class="input-actions">
+                <button class="action-icon-btn highlight-btn" title="Generate New" onclick="generatePassword()">
+                  <i class="fa-solid fa-arrows-rotate" id="refreshGenIcon"></i>
+                </button>
+                <button class="action-icon-btn" title="Copy Password" onclick="copyGeneratedPassword()">
+                  <i class="fa-solid fa-copy"></i>
+                </button>
+              </div>
+            </div>
+
+
+
+            <!-- Personalized Inputs Section (1. Name, 2. Date of Birth, 3. Special Character) -->
+            <div class="personal-generator-card" id="personalInputsCard">
+              <div class="personal-card-header">
+                <i class="fa-solid fa-user-gear"></i>
+                <span>Personalized Password Options (Name + DOB + Symbol)</span>
+                <span class="privacy-badge" style="margin-left: auto;"><i class="fa-solid fa-sparkles"></i> 3-Part AI Synthesizer</span>
+              </div>
+              <div class="personal-inputs-grid">
+                <div class="personal-input-group">
+                  <label for="personalName"><i class="fa-solid fa-user"></i> 1. Name</label>
+                  <input type="text" id="personalName" placeholder="Enter name (e.g. Rahul)" autocomplete="off" oninput="generatePersonalizedPassword()">
+                </div>
+                <div class="personal-input-group">
+                  <label for="personalDob"><i class="fa-solid fa-calendar-days"></i> 2. Date of Birth</label>
+                  <input type="date" id="personalDob" onchange="generatePersonalizedPassword()">
+                </div>
+                <div class="personal-input-group">
+                  <label for="personalSymbol"><i class="fa-solid fa-hashtag"></i> 3. Special Character</label>
+                  <select id="personalSymbol" onchange="generatePersonalizedPassword()">
+                    <option value="@">@ (At symbol)</option>
+                    <option value="#"># (Hashtag)</option>
+                    <option value="$">$ (Dollar)</option>
+                    <option value="%">% (Percent)</option>
+                    <option value="!">! (Exclamation)</option>
+                    <option value="^">^ (Caret)</option>
+                    <option value="&amp;">&amp; (Ampersand)</option>
+                    <option value="*">* (Asterisk)</option>
+                    <option value="?">? (Question mark)</option>
+                  </select>
+                </div>
+              </div>
+              <button class="btn btn-secondary btn-full margin-top-sm" onclick="generatePersonalizedPassword()">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Personalized Password (Name + DOB + Symbol)
+              </button>
+            </div>
+
+            <!-- Controls Grid -->
+            <div class="generator-controls">
+              
+              <!-- Length Slider -->
+              <div class="control-group">
+                <div class="slider-header">
+                  <label for="lengthSlider">Password Length</label>
+                  <span id="lengthVal" class="slider-val">16</span>
+                </div>
+                <input type="range" id="lengthSlider" min="6" max="64" value="16" oninput="onSliderLengthChange(this.value)">
+              </div>
+
+              <!-- Character Checkboxes -->
+              <div class="checkbox-grid">
+                <label class="custom-checkbox">
+                  <input type="checkbox" id="chkUpper" checked onchange="generatePassword()">
+                  <span class="checkmark"></span>
+                  <span>Uppercase Letters (A-Z)</span>
+                </label>
+                <label class="custom-checkbox">
+                  <input type="checkbox" id="chkLower" checked onchange="generatePassword()">
+                  <span class="checkmark"></span>
+                  <span>Lowercase Letters (a-z)</span>
+                </label>
+                <label class="custom-checkbox">
+                  <input type="checkbox" id="chkNumber" checked onchange="generatePassword()">
+                  <span class="checkmark"></span>
+                  <span>Numbers (0-9)</span>
+                </label>
+                <label class="custom-checkbox">
+                  <input type="checkbox" id="chkSymbol" checked onchange="generatePassword()">
+                  <span class="checkmark"></span>
+                  <span>Special Symbols (@, $, %, !, ^, &amp;, *)</span>
+                </label>
+                <label class="custom-checkbox full-width-chk">
+                  <input type="checkbox" id="chkExcludeAmbiguous" onchange="generatePassword()">
+                  <span class="checkmark"></span>
+                  <span>Exclude Ambiguous Characters (i, l, 1, O, 0, o)</span>
+                </label>
+              </div>
+
+            </div>
+
+            <!-- Action Footer -->
+            <div class="gen-footer-actions">
+              <button class="btn btn-primary" onclick="generatePassword()">
+                <i class="fa-solid fa-rotate"></i> Generate Password
+              </button>
+              <button class="btn btn-outline" onclick="transferToChecker()">
+                <i class="fa-solid fa-shield-virus"></i> Test in Strength Checker
+              </button>
+            </div>
+
+            <!-- Generated Strength Preview Card -->
+            <div class="gen-preview-box">
+              <div class="gen-preview-item">
+                <span class="lbl">Estimated Time to Hack:</span>
+                <strong id="genTimeCrack" class="val">---</strong>
+              </div>
+              <div class="gen-preview-item">
+                <span class="lbl">Entropy Score:</span>
+                <strong id="genEntropy" class="val">---</strong>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>CyberShield AI Security Lab &bull; Built with Cryptographic Web Crypto API for Zero-Knowledge Security</p>
+    </footer>
+  </div>
+
+  <!-- Toast Notification System -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>
